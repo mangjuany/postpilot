@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PostPilot · Legendary Trading Academy</title>
+<style>
+  :root { color-scheme: dark; }
+  body { margin: 0; min-height: 100vh; display: grid; place-items: center; padding: 24px 16px; box-sizing: border-box;
+    font: 15px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; color: #D9E3F2;
+    background: radial-gradient(900px 500px at 70% -10%, rgba(90,176,255,.12), transparent 60%), #0A0F1C; }
+  .card { width: 100%; max-width: 560px; background: #111A2E; border: 1px solid #1F2C47; border-radius: 16px; padding: 28px 26px; box-shadow: 0 30px 80px rgba(0,0,0,.45); }
+  h1 { margin: 0 0 6px; font-size: 22px; color: #fff; } h1 b { color: #5AB0FF; }
+  p { margin: 8px 0; color: #A4B3CE; }
+  .ok { border: 1px solid rgba(61,220,151,.35); background: rgba(61,220,151,.08); border-radius: 12px; padding: 14px; margin-top: 16px; color: #CFF7E6; }
+  .url { word-break: break-all; font: 12.5px/1.5 Consolas, ui-monospace, monospace; background: #0B1322; border: 1px solid #2B3B5E; border-radius: 9px; padding: 10px; margin: 10px 0; color: #D9E3F2; }
+  button { width: 100%; padding: 12px; border-radius: 9px; border: 0; font: inherit; font-weight: 700; cursor: pointer; background: linear-gradient(180deg,#5AB0FF,#3B8FE6); color: #06101F; }
+  button:focus-visible, a:focus-visible { outline: 2px solid #5AB0FF; outline-offset: 2px; }
+  a { color: #5AB0FF; } footer { margin-top: 18px; font-size: 13px; text-align: center; }
+</style>
+</head>
+<body>
+<main class="card">
+  <h1>Post<b>Pilot</b></h1>
+  <p>PostPilot is the internal tool Legendary Trading Academy uses to publish its own videos to its own social media accounts.</p>
+  <div id="back" hidden class="ok">
+    <b>✓ TikTok approved PostPilot.</b>
+    <p style="color:#CFF7E6">Last step: copy this address and paste it into PostPilot (<i>Platforms &amp; API → TikTok → Finish connecting</i>).</p>
+    <div class="url" id="url"></div>
+    <button type="button" id="copy">Copy address</button>
+  </div>
+  <div id="err" hidden class="ok" style="border-color:rgba(255,107,107,.4);background:rgba(255,107,107,.08);color:#FFD0D0"></div>
+  <footer><a href="terms.html">Terms of Service</a> · <a href="privacy.html">Privacy Policy</a></footer>
+</main>
+<script>
+  // Shown after TikTok login: the address carries a one-time code that PostPilot (on the academy's own computer) needs.
+  // Nothing is sent anywhere from this page.
+  const q = new URLSearchParams(location.search);
+  if (q.get("code")) {
+    document.getElementById("back").hidden = false;
+    document.getElementById("url").textContent = location.href;
+    document.getElementById("copy").onclick = async e => {
+      try { await navigator.clipboard.writeText(location.href); e.target.textContent = "✓ Copied. Paste it in PostPilot"; }
+      catch { e.target.textContent = "Select the address above and copy it"; }
+    };
+  } else if (q.get("error")) {
+    const el = document.getElementById("err");
+    el.hidden = false; el.textContent = "TikTok login was not completed: " + (q.get("error_description") || q.get("error")) + ". Go back to PostPilot and click Connect TikTok again.";
+  }
+</script>
+</body>
+</html>
